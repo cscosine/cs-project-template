@@ -18,7 +18,3 @@ BreakTemplateDeclarations: Yes
 BreakConstructorInitializers: BeforeComma
 IndentPPDirectives: None
 PointerAlignment: Left
-
-# csCore's OpenMP macro CS_OMP(...) is written like a #pragma and its arguments contain "for": formatted as if it were
-# empty, otherwise the statement after it loses its indentation
-Macros: ['CS_OMP(x)=']
