@@ -1,15 +1,38 @@
 # AGENTS.md
 
-Entry point for coding agents (and people) working in {{ project_name }}: {{ description }}
+<!-- cs-template:begin (this block is owned by cs-project-template: do not edit; the rest of the file is the project's) -->
+Entry point for coding agents (and people) working in {{ project_name }}. The rules of every cscosine repository are
+in [.claude/cscosine-rules.md](.claude/cscosine-rules.md): read them first. What is specific to this repository
+follows this block.
 
-The rules of every cscosine repository are in [.claude/cscosine-rules.md](.claude/cscosine-rules.md) (owned by the
-project template): read them first. This file holds what is specific to this repository.
-
-## Commands
-
-{% if kind != 'library' -%}
-- Setup: `./setup.sh` (Windows: `.\setup.ps1`), then `source .venv/bin/activate`.
-- Checks: `pre-commit run --all-files`; tests: `pytest`.
-{%- else -%}
+Commands:
+{% if kind != 'library' %}
+- Setup: `./setup.sh` (Windows: `.\setup.ps1`), then `source .venv/bin/activate` (the pre-commit hooks run in it).
+- Checks: `pre-commit run --all-files`; tests: `pytest` (`--run-all`: every test, as CI).
+{%- if kind == 'project' %}
+- Recipe: `python {{ project_name }}_project.py` (local run), `python {{ project_name }}_project.py generate-github-workflow`
+  after changing it.
+{%- endif %}
+{%- else %}
 - Checks: `pre-commit run --all-files` (`pre-commit install` once).
 {%- endif %}
+
+Who owns which file (template: [cs-project-template](https://github.com/cscosine/cs-project-template); change it
+there, then `copier update --defaults`; never edit its parts here):
+
+- Template: {% if kind != 'library' %}`setup.sh`, `setup.ps1`, `open-code.sh`, `open-code.ps1`, `conftest.py`, {% endif %}`.clang-format`,
+  `.vscode/`, `.github/`{% if kind == 'tool' %} (the workflows: `ci.yml` only){% elif kind == 'project' %} (not `workflows/`){% endif %}, `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`,
+  `LICENSE`.
+- Template and project: {% if kind != 'library' %}`pyproject.toml` (template tables between the `template` markers), {% endif %}`.pre-commit-config.yaml`,
+  `.gitignore`, `.gitattributes` (project lines after `--- project ---`), `README.md` and this file (the
+  `cs-template` block).
+{%- if kind == 'project' %}
+- csorchestrator (generated, never edited): `.github/workflows/{{ project_name }}.yml`, `csorchestratorsdk/`,
+  `dependencies/`.
+{%- endif %}
+- The project: everything else.
+<!-- cs-template:end -->
+
+## {{ project_name }}
+
+{{ description }}

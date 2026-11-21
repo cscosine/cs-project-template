@@ -83,8 +83,8 @@ One owner per file. A template-owned file is never edited in a repository: chang
 |---|---|
 | Template | `setup.sh` / `setup.ps1`, `open-code.*`, `conftest.py`, `.clang-format`, `.vscode/settings.json`, `.vscode/extensions.json`, `.github/` (`pull_request_template.md`, `release.yml`, `actionlint.yaml`, `workflows/ci.yml` of the tools), `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`, `LICENSE` |
 | Template, project lines at the end | `.pre-commit-config.yaml`, `.gitattributes`, `.gitignore`: the project's lines go after the `--- project ---` marker |
-| Mixed | `pyproject.toml`: `[project]`, `[tool.setuptools]` and the tables after `--- project ---` (coverage, import-linter, …) are the project's; `[build-system]` and the tables between the `template` markers are the template's. `README.md`: the block between `<!-- cs-template:begin -->` and `<!-- cs-template:end -->` (getting started) is the template's, the rest the project's |
-| Template, created once, then the project's | `AGENTS.md`, `constraints-minimum.txt` |
+| Mixed | `pyproject.toml`: `[project]`, `[tool.setuptools]` and the tables after `--- project ---` (coverage, import-linter, …) are the project's; `[build-system]` and the tables between the `template` markers are the template's. `README.md` and `AGENTS.md`: the block between `<!-- cs-template:begin -->` and `<!-- cs-template:end -->` (getting started, generated files; the agents' entry point and the list of template-owned files) is the template's, the rest the project's |
+| Template, created once, then the project's | `constraints-minimum.txt`; with a new repository only (never added by an update): the `tests/` skeleton (`tests/<name>/test_placeholder.py`) |
 | Project | `tests/conftest.py` (when needed): its opt-in markers, its own options and fixtures |
 | Others (not the template) | csorchestrator: `<name>_project.py`, `<name>_config.py`, the generated workflow, `csorchestratorsdk/`, `dependencies/`; csCMake: `CMakePresets.json`, `csCMakeProjectSetup.json` |
 
