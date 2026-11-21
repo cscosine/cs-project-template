@@ -1,20 +1,8 @@
 # Owned by the project template (cs-project-template): change it there.
-# The C++ style of every cscosine repository; see https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# The C++ style of every cscosine repository: standard LLVM, lines up to 120 characters (as Python's, ruff).
+# Standard: Latest only makes clang-format parse modern C++. https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 ---
 Language: Cpp
 BasedOnStyle: LLVM
 Standard: Latest
-
-ColumnLimit: 135
-
-AccessModifierOffset: -2
-IndentWidth: 2
-UseTab: Never
-
-AlignEscapedNewlines: Left
-AllowShortFunctionsOnASingleLine: Empty
-AllowShortLambdasOnASingleLine: Empty
-BreakTemplateDeclarations: Yes
-BreakConstructorInitializers: BeforeComma
-IndentPPDirectives: None
-PointerAlignment: Left
+ColumnLimit: 120
