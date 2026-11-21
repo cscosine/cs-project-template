@@ -33,7 +33,8 @@ cd ~/myWorkspace                                           # the folder holding 
 copier copy gh:cscosine/cs-project-template csNewProject   # asks name, description, kind, ...
 cd csNewProject
 git init -b main
-./setup.sh                                                 # not for a library: pre-commit install
+./setup.sh                                                 # library: pre-commit install instead
+source .venv/bin/activate                                  # the hooks (mypy) run in the venv
 git add -A && git commit -m "Create from cs-project-template"
 gh repo create cscosine/csNewProject --public --source . --push
 ```
@@ -44,7 +45,7 @@ Then, in `cscosine/.github`: add the repository to `scripts/github-settings.json
 
 ### Update a repository to a new template version
 
-In the repository, clean working tree, on a feature branch:
+In the repository, clean working tree, venv active (`source .venv/bin/activate`), on a feature branch:
 
 ```bash
 git switch -c feature/template-update
