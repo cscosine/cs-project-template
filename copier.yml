@@ -40,13 +40,6 @@ kind:
     "project: csorchestrator recipe, with or without C++ sources of its own (distributions, applications)": project
     "library: first-party C++, built by the project that consumes it, no CI of its own": library
 
-large_files_exclude:
-  type: str
-  help: >-
-    Files the large-file check of pre-commit skips, as a regular expression (e.g. ^datasets/ or ^data/big\.bin$);
-    empty: none. The check only looks at files being added
-  default: ""
-
 csorchestrator_version:
   type: str
   help: csorchestrator tag installed by setup.sh / setup.ps1 by default
