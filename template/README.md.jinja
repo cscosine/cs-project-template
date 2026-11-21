@@ -1,0 +1,47 @@
+# {{ project_name }}
+
+{{ description }}
+
+<!-- cs-template:begin (this block is owned by cs-project-template: do not edit; the rest of the file is the project's) -->
+## Getting started
+{%- if kind == 'library' %}
+
+{{ project_name }} is built by the project that consumes it: no setup or CI of its own. Formatting and checks:
+`pre-commit install` once, then `pre-commit run --all-files`.
+{%- else %}
+
+Requires Python 3.11 or newer and Git.
+
+```bash
+./setup.sh                    # Windows: .\setup.ps1
+source .venv/bin/activate     # Windows: .\.venv\Scripts\Activate.ps1
+```
+
+`setup.sh` creates `.venv`, installs the project with its development tools{% if kind == 'project' %} and csorchestrator{% endif %}, and installs the
+pre-commit hooks.
+{%- if kind == 'project' %}
+
+csorchestrator: `setup.sh` installs the pinned version ({{ csorchestrator_version }}). Another one:
+`./setup.sh --csorchestrator=<tag or branch>`; a local clone, editable: `./setup.sh --csorchestrator=../csorchestrator`
+(Windows: `.\setup.ps1 -CsOrchestrator <...>`).
+
+Run the recipe locally, regenerate the GitHub workflow after changing it:
+
+```bash
+python {{ project_name }}_project.py
+python {{ project_name }}_project.py generate-github-workflow
+```
+{%- endif %}
+
+Checks and tests:
+
+```bash
+pre-commit run --all-files
+pytest                        # --run-all: every test, as CI; --run=<marker>: an opt-in group (tests/conftest.py)
+```
+{%- endif %}
+
+The shared files (setup, checks, CI, agent rules) come from
+[cs-project-template](https://github.com/cscosine/cs-project-template); to bring them to its latest version, on a
+branch: `copier update --defaults`.
+<!-- cs-template:end -->
