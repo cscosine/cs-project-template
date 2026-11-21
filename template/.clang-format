@@ -1,10 +1,9 @@
 # Owned by the project template (cs-project-template): change it there.
-# The C++ style of every cscosine repository (was csProjectManager/hooks/.clang-format).
-# see https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# The C++ style of every cscosine repository; see https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 ---
 Language: Cpp
 BasedOnStyle: LLVM
-Standard: Cpp11
+Standard: Latest
 
 ColumnLimit: 135
 
@@ -15,10 +14,11 @@ UseTab: Never
 AlignEscapedNewlines: Left
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortLambdasOnASingleLine: Empty
-AlwaysBreakTemplateDeclarations: true
+BreakTemplateDeclarations: Yes
 BreakConstructorInitializers: BeforeComma
-IndentPPDirectives: AfterHash
+IndentPPDirectives: None
 PointerAlignment: Left
----
-Language: Json
-BasedOnStyle: llvm
+
+# csCore's OpenMP macro CS_OMP(...) is written like a #pragma and its arguments contain "for": formatted as if it were
+# empty, otherwise the statement after it loses its indentation
+Macros: ['CS_OMP(x)=']

@@ -63,11 +63,20 @@ def test_csorchestrator_installed() -> None:
     assert csorchestrator.__name__ == "csorchestrator"
 '''
 
+# formatted as clang-format leaves it with the template's style: pre-commit must not change it (a CS_OMP block: the
+# pragma-like macro once made clang-format drop the indentation of the statement after it)
 HELLO_CPP = """\
 #include <iostream>
 
+#define CS_OMP(...)
+
 int main() {
-  std::cout << "hello cscosine\\n";
+  int sum = 0;
+CS_OMP(parallel for reduction(+ : sum))
+  for (int i = 0; i < 10; i++) {
+    sum += i;
+  }
+  std::cout << "hello cscosine " << sum << "\\n";
   return 0;
 }
 """

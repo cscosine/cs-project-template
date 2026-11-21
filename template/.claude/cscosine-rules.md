@@ -72,6 +72,9 @@ The commands for each case: [CONTRIBUTING.md](https://github.com/cscosine/.githu
   csCMake) instead of a second mechanism.
 - Generated files are never edited by hand: CI workflows (`<name>_project.py generate-github-workflow`), presets
   (`cscmake-generate-presets`), `dependencies/`. Change the source, regenerate, commit both.
+- The shared files of every repository come from `cs-project-template` (who owns which file: the repository's
+  `AGENTS.md`): never edit a template part in a repository; change the template, tag it, `copier update`. Formatting
+  is pre-commit's (clang-format for C / C++ / CUDA, ruff for Python): never by hand.
 - No hidden side effects, no deprecation steps: the ecosystem moves to a new API directly.
 - Projects use released csCMake / csorchestrator; a clone of their `main` only while a change of them is in progress
   (made there, with their own rules, released as the next rc).

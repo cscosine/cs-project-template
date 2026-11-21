@@ -41,13 +41,13 @@ jobs:
       - name: Setup (Linux, macOS)
         if: runner.os != 'Windows' && matrix.kind != 'library'
         working-directory: ${{ runner.temp }}/hello
-        run: ./setup.sh --python=python
+        run: ./setup.sh
         shell: bash
 
       - name: Setup (Windows)
         if: runner.os == 'Windows' && matrix.kind != 'library'
         working-directory: ${{ runner.temp }}/hello
-        run: .\setup.ps1 -Python python
+        run: .\setup.ps1
         shell: pwsh
 
       - name: Setup (library, pre-commit only)
