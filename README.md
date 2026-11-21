@@ -69,8 +69,9 @@ pre-commit run --all-files && pytest --run-all
 git add -A && git commit -m "Update to cs-project-template vX.Y.Z"
 ```
 
-A large file to add on purpose (a dataset): in `.pre-commit-config.yaml`, the `exclude` line under
-`check-added-large-files` is the project's (the template never changes it): uncomment it and set the paths.
+A large file to add on purpose (a dataset): in `.pre-commit-config.yaml`, under `check-added-large-files`, the
+lines between its `project: begin` / `project: end` markers are the project's: uncomment the `exclude` and set the
+paths.
 
 Change an answer at the same time: `copier update --defaults --data workspace_dir=ws` (or without `--defaults`, to be
 asked every question again). Copier replays the project's own changes onto the new template version (a three-way
