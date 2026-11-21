@@ -1,4 +1,4 @@
-# Mixed file. Owned by the project: [project] and its sub-tables, [tool.setuptools], and every table after the
+# Mixed file. Owned by the project: [project] and its sub-tables, and every table after the
 # "project" marker at the end. Owned by the project template (cs-project-template, change it there): [build-system]
 # and the tables between the "template" markers. Never edit a template line here: `copier update` keeps the project
 # lines and replaces the template ones.
@@ -33,10 +33,11 @@ dev = [
     # project: below
 ]
 
+# === template: begin =================================================================================================
+
 [tool.setuptools.packages.find]
 where = ["{{ 'src' if kind == 'tool' else './' }}"]
-
-# === template: begin =================================================================================================
+exclude = ["tests", "tests.*"]
 
 [tool.ruff]
 line-length = 120
