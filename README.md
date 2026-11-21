@@ -18,7 +18,8 @@ themselves (slow, git, smoke, …) are declared by a project in its own `tests/c
 
 ## Use
 
-Copier, once per machine (Python 3.9 or newer; any of these):
+Copier: in a repository it comes with the dev tools (`./setup.sh`, then `source .venv/bin/activate`). To create a
+new repository, once per machine (Python 3.9 or newer; any of these):
 
 ```bash
 pipx install copier
@@ -54,6 +55,9 @@ organisation knows it from then on. In `scripts/`:
 A repository that is in neither file exists on GitHub but is invisible to the overview and unprotected.
 
 ### Update a repository to a new template version
+
+Which version a repository is on: `.copier-answers.yml` (`_commit`); `copier check-update` says whether a newer one
+exists. For every repository at once: the "Project template" section of `cscosine/.github` `ECOSYSTEM.md` (nightly).
 
 In the repository, clean working tree, venv active (`source .venv/bin/activate`), on a feature branch:
 
