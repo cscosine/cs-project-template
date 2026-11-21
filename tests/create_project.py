@@ -111,6 +111,10 @@ def main() -> int:
         write(destination / "tests" / "test_markers.py", TEST_MARKERS)
     subprocess.run(["git", "init", "-q", "-b", "main"], cwd=destination, check=True)
     subprocess.run(["git", "add", "-A"], cwd=destination, check=True)
+    # executable in git on every OS: Windows has no executable bit, the rendered scripts would be committed as 644
+    scripts = [name for name in ("setup.sh", "open-code.sh") if (destination / name).exists()]
+    if scripts:
+        subprocess.run(["git", "update-index", "--chmod=+x", *scripts], cwd=destination, check=True)
     return 0
 
 

@@ -35,7 +35,9 @@ cd csNewProject
 git init -b main
 ./setup.sh                                                 # library: pre-commit install instead
 source .venv/bin/activate                                  # the hooks (mypy) run in the venv
-git add -A && git commit -m "Create from cs-project-template"
+git add -A
+git update-index --chmod=+x setup.sh open-code.sh          # needed on Windows (no executable bit); not for a library
+git commit -m "Create from cs-project-template"
 gh repo create cscosine/csNewProject --public --source . --push
 ```
 
