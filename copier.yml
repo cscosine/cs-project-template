@@ -42,6 +42,17 @@ kind:
     "project: csorchestrator recipe, with or without C++ sources of its own (distributions, applications)": project
     "library: first-party C++, built by the project that consumes it, no CI of its own": library
 
+# derived, never asked nor stored: names used in paths (no filter in a path: "|" is not valid in a Windows file name)
+package_name:
+  type: str
+  default: "{{ project_name | lower | replace('-', '_') }}"
+  when: false
+
+tests_name:
+  type: str
+  default: "{{ project_name | replace('-', '_') }}"
+  when: false
+
 csorchestrator_version:
   type: str
   help: csorchestrator tag installed by setup.sh / setup.ps1 by default
