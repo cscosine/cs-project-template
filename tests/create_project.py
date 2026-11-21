@@ -4,8 +4,8 @@
     tests/create_project.py <kind> <destination>
 
 Renders the template at HEAD (the commit under test, not the latest tag) with copier, then adds what a real project
-would: a Python package and its tests (tool, project), a C++ source (library), a tests/conftest.py declaring opt-in
-markers, and git init. The CI then runs the project's own setup script, pre-commit and pytest in it.
+would: a Python package and its tests (tool, project), a C++ source (library), a CMakeLists.txt with a csCMake call
+(project, library), a tests/conftest.py declaring opt-in markers, and git init. The CI then runs the project's own setup script, pre-commit and pytest in it.
 """
 
 from __future__ import annotations
@@ -83,6 +83,26 @@ int main() {
 """
 
 
+# formatted as gersemi lays it out with the signatures of the csCMake commands: the gersemi hook must install them from
+# the csCMake tag (gersemi fails on a missing extension) and leave the file unchanged
+CMAKELISTS = """\
+cmake_minimum_required(VERSION 3.25)
+project(cshello LANGUAGES CXX)
+
+include(csCMake)
+
+cs_initialize_project(
+  NAMESPACE cshello
+  CXX_STANDARD 17
+  DEFAULT_CONFIG Debug
+  DEFAULT_CONFIG Release
+  CUSTOM_CONFIG Paranoid
+  BASED_ON "Debug,Release,"
+  POSTFIX "dp"
+)
+"""
+
+
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8", newline="\n")
@@ -119,6 +139,8 @@ def main() -> int:
     if kind != "library":
         write(destination / "tests" / "conftest.py", CONFTEST)
         write(destination / "tests" / "test_markers.py", TEST_MARKERS)
+    if kind != "tool":
+        write(destination / "CMakeLists.txt", CMAKELISTS)
     subprocess.run(["git", "init", "-q", "-b", "main"], cwd=destination, check=True)
     subprocess.run(["git", "add", "-A"], cwd=destination, check=True)
     # executable in git on every OS: Windows has no executable bit, the rendered scripts would be committed as 644
