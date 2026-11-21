@@ -59,13 +59,13 @@ tests_name:
 # new csCMake release moves it in a template release
 cscmake_tag:
   type: str
-  default: v1.0.0-rc9
+  default: v1.0.0
   when: false
 
 csorchestrator_version:
   type: str
   help: csorchestrator tag installed by setup.sh / setup.ps1 by default
-  default: v0.1.0-rc1
+  default: v0.1.0
   when: "{{ kind == 'project' }}"
 
 workspace_dir:
