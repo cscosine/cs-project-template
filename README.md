@@ -69,6 +69,9 @@ pre-commit run --all-files && pytest --run-all
 git add -A && git commit -m "Update to cs-project-template vX.Y.Z"
 ```
 
+A large file to add on purpose (a dataset): `copier update --defaults --data large_files_exclude='^datasets/'`, the
+large-file hook then skips those paths.
+
 Change an answer at the same time: `copier update --defaults --data workspace_dir=ws` (or without `--defaults`, to be
 asked every question again). Copier replays the project's own changes onto the new template version (a three-way
 merge), so the project lines (below) are kept; a template-owned line edited in the repository conflicts.

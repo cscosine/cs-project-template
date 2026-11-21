@@ -8,6 +8,9 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files # prevents giant files from being committed.
+{%- if large_files_exclude %}
+        exclude: {{ large_files_exclude | tojson }} # the answer large_files_exclude
+{%- endif %}
       - id: check-case-conflict # checks for files that would conflict in case-insensitive filesystems.
       - id: check-merge-conflict # checks for files that contain merge conflict strings.
       - id: check-yaml # checks yaml files for parseable syntax.
