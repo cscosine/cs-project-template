@@ -55,17 +55,11 @@ tests_name:
   default: "{{ project_name | replace('-', '_') }}"
   when: false
 
-# the csCMake tag the gersemi hook installs the signatures of the cs_* commands from (gersemi-cscmake); not asked: a
-# new csCMake release moves it in a template release
-cscmake_tag:
-  type: str
-  default: v1.0.0-rc9
-  when: false
-
 csorchestrator_version:
   type: str
   help: csorchestrator tag installed by setup.sh / setup.ps1 by default
-  default: v0.1.0-rc1
+  # for a new project: the project keeps its answer, moved with `copier update -d csorchestrator_version=<tag>`
+  default: v0.1.0
   when: "{{ kind == 'project' }}"
 
 workspace_dir:

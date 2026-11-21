@@ -83,8 +83,8 @@ int main() {
 """
 
 
-# formatted as gersemi lays it out with the signatures of the csCMake commands: the gersemi hook must install them from
-# the csCMake tag (gersemi fails on a missing extension) and leave the file unchanged
+# formatted as gersemi lays it out with the signatures of the csCMake commands: the gersemi-cscmake hook must load them
+# (gersemi fails on a missing extension) and leave the file unchanged; cscmake-lint must find nothing
 CMAKELISTS = """\
 cmake_minimum_required(VERSION 3.25)
 project(cshello LANGUAGES CXX)
@@ -122,6 +122,9 @@ def main() -> int:
             f"--data=project_name={name}",
             f"--data=description=hello world {kind}",
             f"--data=kind={kind}",
+            # csorchestrator: the latest final (its stable branch), not the template's default, which a new
+            # csorchestrator release may only reach in a later template release
+            *(["--data=csorchestrator_version=stable"] if kind == "project" else []),
             str(TEMPLATE),
             str(destination),
         ],
