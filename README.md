@@ -75,6 +75,11 @@ A large file to add on purpose (a dataset): in `.pre-commit-config.yaml`, under 
 lines between its `project: begin` / `project: end` markers are the project's: uncomment the `exclude` and set the
 paths.
 
+Files no hook may touch (the upstream files of a library copied from elsewhere, kept as they are): in
+`.pre-commit-config.yaml`, the top-level `exclude:` between the first `project: begin` / `project: end` markers (a
+regex on the path). For C++ formatting only, a `.clang-format` with `DisableFormat: true` in a folder (clang-format
+takes the nearest one) leaves the C++ files under it unformatted while the other hooks still run.
+
 Change an answer at the same time: `copier update --defaults --data workspace_dir=ws` (or without `--defaults`, to be
 asked every question again). Copier replays the project's own changes onto the new template version (a three-way
 merge), so the project lines (below) are kept; a template-owned line edited in the repository conflicts.
