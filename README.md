@@ -39,9 +39,17 @@ git add -A && git commit -m "Create from cs-project-template"
 gh repo create cscosine/csNewProject --public --source . --push
 ```
 
-Then, in `cscosine/.github`: add the repository to `scripts/github-settings.json` (its kind) and run
-`scripts/github_settings.py` (rulesets, settings, labels). Copier takes the latest tag of the template; another one:
-`--vcs-ref v0.1.0`.
+Copier takes the latest tag of the template; another one: `--vcs-ref v0.1.0`.
+
+Then register the repository in [`cscosine/.github`](https://github.com/cscosine/.github): one line, and the
+organisation knows it from then on. In `scripts/`:
+
+| Add | What it gives |
+|---|---|
+| The name under its kind in `github-settings.json` (`"tool"`, `"distribution"`, `"application"`, `"library"`, …) | `github_settings.py --apply <name>`: the rulesets (no force push or deletion of `main`, stable tags immutable), merge settings, release-note labels. And its **status is tracked**: the nightly `ecosystem` workflow lists it in `ECOSYSTEM.md` with its kind, latest release and rc, CI state of `main`, template version, and flags drift (behind the template, old pins) |
+| A line in `ecosystem.json` (public repositories worth showing: its group and one sentence) | Its card on the public organisation page (`profile/README.md`): description, latest release, CI badge, place in the release-chain graph |
+
+A repository that is in neither file exists on GitHub but is invisible to the overview and unprotected.
 
 ### Update a repository to a new template version
 
@@ -92,5 +100,18 @@ another one from GitHub; `--csorchestrator=<path>` a local clone, editable (Wind
 
 ## Developing the template
 
-Render every kind into a scratch folder and run its checks (`copier copy --defaults -d kind=<kind> ...`, `git init`,
-`pre-commit run --all-files`); later the template's CI does it on every PR.
+The CI (`.github/workflows/ci.yml`, on every PR, push to `main` and tag) creates a project of every kind from the
+commit under test with a hello world (`tests/create_project.py`), then runs in it what a developer runs: the setup
+script (`setup.sh`, `setup.ps1` on Windows; for a `project` it installs the pinned csorchestrator), pre-commit on
+every file (nothing may change: what the template renders is already formatted) and `pytest --run-all` (the hello
+world, csorchestrator importable, an opt-in marker run and a manual one skipped). Tool and project on Linux, macOS and
+Windows; library on Linux.
+
+The same by hand, before a PR:
+
+```bash
+python tests/create_project.py project /tmp/hello    # tool, project or library; uncommitted changes included
+cd /tmp/hello && ./setup.sh && source .venv/bin/activate && pre-commit run --all-files && pytest --run-all
+```
+
+Changing the template: PR, CI green, merge, tag `vX.Y.Z`; the repositories move with `copier update` (above).
