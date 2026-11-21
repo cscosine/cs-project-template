@@ -56,7 +56,16 @@ repos:
         # generated files such as CMakePresets.json
         types_or: [c, c++, cuda]
         args: ["-style=file"]
-
+{% if kind != 'tool' %}
+  # CMake: gersemi lays out the CMake files (.gersemirc), with the signatures of the csCMake commands (the extension
+  # gersemi-cscmake, installed from the csCMake tag)
+  - repo: https://github.com/BlankSpruce/gersemi-pre-commit
+    rev: 0.29.2
+    hooks:
+      - id: gersemi
+        additional_dependencies:
+          - gersemi-cscmake @ git+https://github.com/cscosine/csCMake@{{ cscmake_tag }}#subdirectory=gersemi
+{% endif %}
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.12
     hooks:
