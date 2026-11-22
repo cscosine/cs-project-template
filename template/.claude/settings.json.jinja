@@ -8,6 +8,8 @@
     }
   },
   "enabledPlugins": {
-    "cs-org@cscosine": true
+{%- for plugin in ["cs-org"] + claude_plugins %}
+    "{{ plugin }}@cscosine": true{{ "," if not loop.last }}
+{%- endfor %}
   }
 }

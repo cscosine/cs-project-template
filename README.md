@@ -24,6 +24,12 @@ answer `workspace_dir` of a `project`, default `workspace`), the pytest options 
 The opt-in markers themselves (slow, git, smoke, …) are declared by a project in its own `tests/conftest.py` (see
 `template/conftest.py`).
 
+Claude Code: `.claude/settings.json` declares the `cscosine` plugin marketplace (`cscosine/.github`) and enables
+`cs-org` plus the plugins of the answer `claude_plugins`, the tools and libraries the repository uses: `cscmake`,
+`csorchestrator`, `csfoundation`, `csoptimization` (default: a `project` `cscmake` and `csorchestrator`, a `library`
+`cscmake`, a `tool` none). Claude Code proposes to install them when the folder is trusted. A repository's own skills
+go in `.claude/skills/`.
+
 ## Use
 
 Copier: in a repository it comes with the dev tools (`./setup.sh`, then `source .venv/bin/activate`). To create a
