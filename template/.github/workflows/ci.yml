@@ -4,7 +4,7 @@ name: CI
 
 on:
   workflow_dispatch:
-  # weekly run on main, Sun 20:15 CET: the tools, after the hooks and the template (20:00), before csqt6 (21:07)
+  # weekly run on main, Sun 20:15 CET: the tools, after the hooks and the template (20:00), before csqt6 (20:50)
   schedule:
     - cron: "15 19 * * 0"
   pull_request:
