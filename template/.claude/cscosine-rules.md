@@ -49,9 +49,9 @@ The commands for each case: [CONTRIBUTING.md](https://github.com/cscosine/.githu
   branch on demand. No build for `stable` (it only receives commits already built).
 - The weekly schedule is a queue in dependency order, one project at a time (no shared runners), in CET: Sunday 20:00
   cs-pre-commit-hooks and the template, 20:15 the tools (csCMake, csorchestrator, csWiki), 21:07 csqt6, then from Monday
-  01:45 the build train, the `.github` ecosystem update at 08:00. A new outer project gets its own slot after the
-  projects it depends on (`schedule=` in its recipe, crons in UTC), never csorchestrator's default (Monday 03:00 UTC).
-  The queue: ECOSYSTEM.md, Weekly queue.
+  01:15 the build train, the `.github` ecosystem update at 07:00 (08:00 in summer: the crons are UTC). A new outer
+  project gets its own slot after the projects it depends on (`schedule=` in its recipe, crons in UTC), never
+  csorchestrator's default (Monday 03:00 UTC). The queue: ECOSYSTEM.md, Weekly queue.
 
 ### Changes across repositories
 
