@@ -21,7 +21,7 @@ Who owns which file (template: [cs-project-template](https://github.com/cscosine
 there, then `copier update --defaults`; never edit its parts here):
 
 - Template: {% if kind != 'library' %}`setup.sh`, `setup.ps1`, `open-code.sh`, `open-code.ps1`, `conftest.py`, {% endif %}`.clang-format`,
-  `.vscode/`, `.github/`{% if kind == 'tool' %} (the workflows: `ci.yml` only){% elif kind == 'project' %} (not `workflows/`){% endif %}, `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`,
+  `.vscode/`, `.github/` (the workflows: `checks.yml`{% if kind == 'tool' %}, `ci.yml`{% endif %} only), `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`,
   `LICENSE`.
 - Template and project: {% if kind != 'library' %}`pyproject.toml` (template tables between the `template` markers), {% endif %}`.pre-commit-config.yaml` (project hooks
   between the `project: begin` / `project: end` markers), `.gitignore`, `.gitattributes` (project lines after

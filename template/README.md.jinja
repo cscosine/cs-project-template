@@ -6,8 +6,8 @@
 ## Getting started
 {%- if kind == 'library' %}
 
-{{ project_name }} is built by the project that consumes it: no setup or CI of its own. Formatting and checks:
-`pre-commit install` once, then `pre-commit run --all-files`.
+{{ project_name }} is built by the project that consumes it: no setup or build CI of its own. Formatting and checks:
+`pre-commit install` once, then `pre-commit run --all-files` (also run by `.github/workflows/checks.yml`).
 {%- else %}
 
 Requires Python 3.11 or newer and Git.

@@ -9,10 +9,12 @@ specific to this repository is in `AGENTS.md`.
 - **Outer** repositories run CI and release: the tools (csCMake, csorchestrator, csWiki), the distributions
   (third_party_base_libs, csqt6, csopencvcpu, csopencvcuda, csfoundation, csoptimization) and the applications
   (csImgTracker, csSkiTracker).
-- **Inner** repositories are built by an outer one and have no CI of their own: the first-party libraries (csCore,
-  csLie, csCamera, csVisOpenGL by csfoundation; csNelson, csBlockMatrix by csoptimization) and the forks of
+- **Inner** repositories are built by an outer one and have no build CI of their own: the first-party libraries
+  (csCore, csLie, csCamera, csVisOpenGL by csfoundation; csNelson, csBlockMatrix by csoptimization) and the forks of
   third-party libraries (by third_party_base_libs, csopencvcpu, csopencvcuda). A change in an inner repository is
   validated by its outer repository's CI.
+- Checks: every repository on the template runs `.github/workflows/checks.yml` (pre-commit on every file, every hook,
+  in the project venv) on each push and PR to `main`, inner repositories included.
 - Release chain (a change travels in this order): csorchestrator, csCMake → third_party_base_libs → csqt6,
   csopencvcpu, csopencvcuda → csfoundation → csoptimization → applications.
 - Plans and their progress: `cscosine/.github/plans/`. A commit or PR that completes a plan step names the step id
