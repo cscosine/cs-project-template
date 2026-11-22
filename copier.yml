@@ -66,3 +66,16 @@ workspace_dir:
   help: Folder of the csorchestrator runs (checkouts, builds, installs, deploy archives), the base_target_dir of the recipe; git, mypy, pytest and VS Code ignore it
   default: workspace
   when: "{{ kind == 'project' }}"
+
+claude_plugins:
+  type: yaml
+  multiselect: true
+  help: >-
+    Plugins of the cscosine marketplace (cscosine/.github) Claude Code enables in this repository, besides cs-org (always):
+    the tools and libraries the repository uses
+  choices:
+    "cscmake: using csCMake (CMake projects, libraries)": cscmake
+    "csorchestrator: using csorchestrator (projects)": csorchestrator
+    "csfoundation: the csCore, csLie, csCamera, csVisOpenGL libraries": csfoundation
+    "csoptimization: the csNelson, csBlockMatrix libraries": csoptimization
+  default: "{% if kind == 'project' %}[cscmake, csorchestrator]{% elif kind == 'library' %}[cscmake]{% else %}[]{% endif %}"
