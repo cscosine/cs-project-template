@@ -59,6 +59,9 @@ The commands for each case: [CONTRIBUTING.md](https://github.com/cscosine/.githu
 - Release: tag `vX.Y.Z` on the commit (usually the last rc), then `stable` fast-forwarded to it. The libraries and
   forks it built are tagged on the commits used (own semver; forks `-cs.N`).
 - Forks: `vX.Y.Z-cs.N` (upstream version, our patch level); our changes are commits on top of the upstream tag.
+- Versions: the first commit that changes a repository after a release bumps its version (`pyproject.toml` or
+  `project(VERSION)`), by semver (from 1.0.0 major / minor / patch = breaking / feature / fix; in 0.x minor = breaking,
+  patch = the rest); details and exceptions: CONTRIBUTING.md, "Versions".
 - Stable tags (`vX.Y.Z`, `vX.Y.Z-cs.N`) are never moved or deleted. Pre-release tags (`-rcN`, `-test…`) can be
   deleted (with their release: `gh release delete <tag> --cleanup-tag`) but never moved: a broken rc gets the next
   number.
