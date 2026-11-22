@@ -12,12 +12,12 @@ repository gets.
 | `library` | first-party C++, built by the project that consumes it, no CI | none | the formatting, checks, git and agent files; no setup, no Python files |
 
 Everything else is the same for every kind: C++ formatting (clang-format only touches C++ and JSON files), CMake
-formatting and checks for a `project` and a `library` (the hooks `gersemi-cscmake` and `cscmake-lint` of
-[cs-pre-commit-hooks](https://github.com/cscosine/cs-pre-commit-hooks), `.gersemirc`; a `tool` has its own or no
-CMake), the Python
-hooks (they skip a repository without Python files), the csorchestrator workspace ignored (the answer `workspace_dir`
-of a `project`, default `workspace`), the pytest options (`--run-all`, as CI; `--run=<marker>`). The opt-in markers
-themselves (slow, git, smoke, …) are declared by a project in its own `tests/conftest.py` (see `template/conftest.py`).
+formatting and checks (the hooks `gersemi-cscmake` and `cscmake-lint` of
+[cs-pre-commit-hooks](https://github.com/cscosine/cs-pre-commit-hooks), `.gersemirc`; they skip a repository without
+CMake files), the Python hooks (they skip a repository without Python files), the csorchestrator workspace ignored (the
+answer `workspace_dir` of a `project`, default `workspace`), the pytest options (`--run-all`, as CI; `--run=<marker>`).
+The opt-in markers themselves (slow, git, smoke, …) are declared by a project in its own `tests/conftest.py` (see
+`template/conftest.py`).
 
 ## Use
 
@@ -97,7 +97,7 @@ One owner per file. A template-owned file is never edited in a repository: chang
 
 | Owner | Files |
 |---|---|
-| Template | `setup.sh` / `setup.ps1`, `open-code.*`, `conftest.py`, `.clang-format`, `.vscode/settings.json`, `.vscode/extensions.json`, `.gersemirc` (projects, libraries), `.github/` (`pull_request_template.md`, `release.yml`, `actionlint.yaml`, `workflows/ci.yml` of the tools), `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`, `LICENSE` |
+| Template | `setup.sh` / `setup.ps1`, `open-code.*`, `conftest.py`, `.clang-format`, `.vscode/settings.json`, `.vscode/extensions.json`, `.gersemirc`, `.github/` (`pull_request_template.md`, `release.yml`, `actionlint.yaml`, `workflows/ci.yml` of the tools), `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`, `LICENSE` |
 | Template, with a project part | `.pre-commit-config.yaml`: the project's hooks go between the `project: begin` and `project: end` markers, before the template's final check; `.gitattributes`, `.gitignore`: the project's lines go after the `--- project ---` marker at the end |
 | Mixed | `pyproject.toml`: `[project]` and the tables after `--- project ---` (coverage, import-linter, …) are the project's; `[build-system]` and the tables between the `template` markers are the template's. `README.md` and `AGENTS.md`: the block between `<!-- cs-template:begin -->` and `<!-- cs-template:end -->` (getting started, generated files; the agents' entry point and the list of template-owned files) is the template's, the rest the project's |
 | Template, created once, then the project's | With a new repository only (never added by an update): the `tests/` skeleton (`tests/<name>/test_placeholder.py`) and, for a tool, the package skeleton `src/<name>/__init__.py` |
