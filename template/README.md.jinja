@@ -69,7 +69,8 @@ Once the project that builds {{ project_name }} has built it (csorchestrator), o
 C++ sources of its own (a `CMakeLists.txt` and a `csCMakeProjectSetup.json`), it attaches the window to one of their
 builds, made by a local run of the recipe (`python {{ project_name }}_project.py`); before the first build it opens a
 Python-only window. Without C++ sources it opens the folder.
-{%- endif %} The filter is a part of the build folder name or of the compiler (`gcc`, `clang`, `msvc`, `clang-cl`),
+{%- endif %}
+The filter is a part of the build folder name or of the compiler (`gcc`, `clang`, `msvc`, `clang-cl`),
 needed when there are several builds.
 
 The script writes a **workspace file** for the chosen build, `<build>/{{ project_name }}.code-workspace`, and opens it
