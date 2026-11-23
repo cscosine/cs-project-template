@@ -1,7 +1,7 @@
 # Owned by the project template (cs-project-template): change it there.
 # Opens VS Code on this repository attached to one of its existing builds (made by csorchestrator, or by hand with a
 # preset), in either csCMake layout:
-#   standalone: <repository>\workspace\build\<variant>\<repository>[\<config>]   (a project with its own sources)
+#   standalone: <repository>\_csw\build\<variant>\<repository>[\<config>]        (a project with its own sources)
 #   sibling:    <workspace>\build\<variant>\<repository>[\<config>]              (a library checked out by its project)
 # Writes <build>\<repository>.code-workspace with the settings of that build (build folder, generator, configurations,
 # IntelliSense engine, debugger), opens it with the README at "Working in VS Code", and prints the first-time steps.
@@ -78,22 +78,31 @@ function OpenPythonOnlyWorkspace([string]$Reason) {
     exit 0
 }
 
-# where the builds are: the csCMake layout the repository declares in csCMakeProjectSetup.json gives the workspace
-# root (as csCMake's presets\layout\*.json do), csCMake's presets build in <workspace root>\build
+# where the builds are: the include of csCMakeProjectSetup.json, <csCMake>/presets/layout/<layout>.json, names csCMake;
+# in the sibling and standalone layouts csCMake is <workspace root>/csCMake (${sourceParentDir} / ${sourceDir}
+# expanded), in the env layouts (env*.json) the workspace root is CSCMAKE_WORKSPACE_ROOT; csCMake's presets build in
+# <workspace root>\build. No folder name here: the project's file says it.
+$include = ""
 $layout = ""
 $setupFile = Join-Path $src "csCMakeProjectSetup.json"
 if (Test-Path $setupFile) {
-    $m = Select-String -Path $setupFile -Pattern 'presets/layout/([A-Za-z0-9_-]+)\.json' | Select-Object -First 1
-    if ($null -ne $m) { $layout = $m.Matches[0].Groups[1].Value }
+    $m = Select-String -Path $setupFile -Pattern '"([^"]*)/presets/layout/([A-Za-z0-9_-]+)\.json"' | Select-Object -First 1
+    if ($null -ne $m) { $include = $m.Matches[0].Groups[1].Value; $layout = $m.Matches[0].Groups[2].Value }
 }
-$workspaceRoot = switch -Regex ($layout) {
-    '^standalone(-short)?$' { Join-Path $src "workspace" }
-    '^sibling(-short)?$' { Split-Path $src -Parent }
-    '^env(-short)?$' { if ($env:CSCMAKE_WORKSPACE_ROOT) { $env:CSCMAKE_WORKSPACE_ROOT } else { "" } }
-    default { "" }
+$workspaceRoot = ""
+if ($layout.StartsWith("env")) {
+    if ($env:CSCMAKE_WORKSPACE_ROOT) { $workspaceRoot = $env:CSCMAKE_WORKSPACE_ROOT }
+} elseif ($include -match '/csCMake$') {
+    $csCMakeDir = ""
+    if ($include.StartsWith('${sourceDir}/')) {
+        $csCMakeDir = Join-Path $src $include.Substring('${sourceDir}/'.Length)
+    } elseif ($include.StartsWith('${sourceParentDir}/')) {
+        $csCMakeDir = Join-Path (Split-Path $src -Parent) $include.Substring('${sourceParentDir}/'.Length)
+    }
+    if ($csCMakeDir) { $workspaceRoot = Split-Path $csCMakeDir -Parent }
 }
 if (-not $workspaceRoot) {
-    Write-Error "No workspace root for ${name}: csCMake layout '$layout' in csCMakeProjectSetup.json (standalone, sibling, env[-short]; env needs CSCMAKE_WORKSPACE_ROOT set)."
+    Write-Error "No workspace root for ${name} from the include of csCMakeProjectSetup.json ('$include'): <root>/csCMake/presets/layout/<layout>.json under `${sourceDir} or `${sourceParentDir}, or an env layout with CSCMAKE_WORKSPACE_ROOT set."
 }
 $buildRoot = Join-Path $workspaceRoot "build"
 
@@ -116,7 +125,7 @@ if ($builds.Count -eq 0 -and $venvPython -ne "" -and $Filter -eq "") {
 }
 if ($builds.Count -eq 0) {
     $suffix = if ($Filter -ne "") { " matching '$Filter'" } else { "" }
-    Write-Error "No build of $name$suffix in $buildRoot (layout $layout): build it first (csorchestrator)."
+    Write-Error "No build of $name$suffix in ${buildRoot}: build it first (csorchestrator)."
 }
 if ($builds.Count -gt 1) {
     Write-Host "Several builds of ${name}: choose one with a filter (a part of the folder name or of the compiler)."

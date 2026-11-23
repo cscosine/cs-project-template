@@ -2,7 +2,7 @@
 # Owned by the project template (cs-project-template): change it there.
 # Opens VS Code on this repository attached to one of its existing builds (made by csorchestrator, or by hand with a
 # preset), in either csCMake layout:
-#   standalone: <repository>/workspace/build/<variant>/<repository>[/<config>]   (a project with its own sources)
+#   standalone: <repository>/_csw/build/<variant>/<repository>[/<config>]        (a project with its own sources)
 #   sibling:    <workspace>/build/<variant>/<repository>[/<config>]              (a library checked out by its project)
 # Writes <build>/<repository>.code-workspace with the settings of that build (build folder, generator, configurations,
 # IntelliSense engine, debugger), opens it with the README at "Working in VS Code", and prints the first-time steps.
@@ -73,18 +73,27 @@ cache_value() { # <cache> <variable>: its value in CMakeCache.txt
   sed -n "s/^$2:[A-Z]*=//p" "$1" | head -n 1
 }
 
-# where the builds are: the csCMake layout the repository declares in csCMakeProjectSetup.json gives the workspace
-# root (as csCMake's presets/layout/*.json do), csCMake's presets build in <workspace root>/build
-layout="$(sed -n 's#.*presets/layout/\([A-Za-z0-9_-]*\)\.json.*#\1#p' "$src/csCMakeProjectSetup.json" 2>/dev/null | head -n 1 || true)"
-case "$layout" in
-  standalone | standalone-short) workspace_root="$src/workspace" ;;
-  sibling | sibling-short) workspace_root="$(dirname "$src")" ;;
-  env | env-short) workspace_root="${CSCMAKE_WORKSPACE_ROOT:-}" ;;
-  *) workspace_root="" ;;
+# where the builds are: the include of csCMakeProjectSetup.json, <csCMake>/presets/layout/<layout>.json, names csCMake;
+# in the sibling and standalone layouts csCMake is <workspace root>/csCMake (${sourceParentDir} / ${sourceDir}
+# expanded), in the env layouts (env*.json) the workspace root is CSCMAKE_WORKSPACE_ROOT; csCMake's presets build in
+# <workspace root>/build. No folder name here: the project's file says it.
+include="$(grep -o '"[^"]*/presets/layout/[A-Za-z0-9_-]*\.json"' "$src/csCMakeProjectSetup.json" 2>/dev/null | head -n 1 || true)"
+include="${include//\"/}"
+cscmake_dir="${include%/presets/layout/*}"
+layout="${include##*/}"
+workspace_root=""
+case "$layout:$cscmake_dir" in
+  env*) workspace_root="${CSCMAKE_WORKSPACE_ROOT:-}" ;;
+  *:'${sourceDir}/'*/csCMake) workspace_root="$src/${cscmake_dir#'${sourceDir}/'}" ;;
+  *:'${sourceParentDir}/'*/csCMake | *:'${sourceParentDir}/csCMake')
+    workspace_root="$(dirname "$src")/${cscmake_dir#'${sourceParentDir}/'}"
+    ;;
 esac
+workspace_root="${workspace_root%/csCMake}"
 if [[ -z "$workspace_root" ]]; then
-  echo "No workspace root for $name: csCMake layout '${layout:-none}' in csCMakeProjectSetup.json" >&2
-  echo "(standalone, sibling, env[-short]; env needs CSCMAKE_WORKSPACE_ROOT set)." >&2
+  echo "No workspace root for $name from the include of csCMakeProjectSetup.json ('${include:-none}'):" >&2
+  echo "<root>/csCMake/presets/layout/<layout>.json under \${sourceDir} or \${sourceParentDir}, or an env layout with" >&2
+  echo "CSCMAKE_WORKSPACE_ROOT set." >&2
   exit 1
 fi
 build_root="$workspace_root/build"
@@ -107,7 +116,7 @@ if [[ ${#builds[@]} -eq 0 && -n "$venv_python" && -z "$filter" ]]; then
   open_python_only_workspace "No build of $name yet"
 fi
 if [[ ${#builds[@]} -eq 0 ]]; then
-  echo "No build of $name${filter:+ matching '$filter'} in $build_root (layout $layout):" >&2
+  echo "No build of $name${filter:+ matching '$filter'} in $build_root:" >&2
   echo "build it first (csorchestrator)." >&2
   exit 1
 fi

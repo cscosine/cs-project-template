@@ -59,12 +59,6 @@ csorchestrator_version:
   default: v0.1.0
   when: "{{ kind == 'project' }}"
 
-workspace_dir:
-  type: str
-  help: Folder of the csorchestrator runs (checkouts, builds, installs, deploy archives), the base_target_dir of the recipe; git, mypy, pytest and VS Code ignore it
-  default: workspace
-  when: "{{ kind == 'project' }}"
-
 claude_plugins:
   type: yaml
   multiselect: true

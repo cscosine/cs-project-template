@@ -39,7 +39,7 @@ Generated files, never edited by hand:
 | `.github/workflows/{{ project_name }}.yml` | `{{ project_name }}_project.py generate-github-workflow` | Edit the recipe, then regenerate |
 | `csorchestratorsdk/` | csorchestrator, at the same command | The release-manifest helpers the CI runs, without installing csorchestrator |
 | `dependencies/` | csorchestrator, at the same command | The manifests and recipes of the releases this project builds on |
-| `{{ workspace_dir }}/` *(git-ignored)* | a local run of `{{ project_name }}_project.py` | Sources, builds, installs, deploy archives; delete it to start clean |
+| `_csw/` *(git-ignored)* | a local run of `{{ project_name }}_project.py` | Sources, builds, installs, deploy archives; delete it to start clean |
 {%- endif %}
 
 Checks and tests:

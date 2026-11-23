@@ -19,8 +19,8 @@ files: a project's generated workflow is left alone.
 Everything else is the same for every kind: C++ formatting (clang-format only touches C++ and JSON files), CMake
 formatting and checks (the hooks `gersemi-cscmake` and `cscmake-lint` of
 [cs-pre-commit-hooks](https://github.com/cscosine/cs-pre-commit-hooks), `.gersemirc`; they skip a repository without
-CMake files), the Python hooks (they skip a repository without Python files), the csorchestrator workspace ignored (the
-answer `workspace_dir` of a `project`, default `workspace`), the pytest options (`--run-all`, as CI; `--run=<marker>`).
+CMake files), the Python hooks (they skip a repository without Python files), the csorchestrator workspace ignored
+(`_csw/`, the workspace of csCMake's standalone layout and the recipe's `base_target_dir`), the pytest options (`--run-all`, as CI; `--run=<marker>`).
 The opt-in markers themselves (slow, git, smoke, …) are declared by a project in its own `tests/conftest.py` (see
 `template/conftest.py`).
 
@@ -99,8 +99,9 @@ Files no hook may touch (the upstream files of a library copied from elsewhere, 
 regex on the path). For C++ formatting only, a `.clang-format` with `DisableFormat: true` in a folder (clang-format
 takes the nearest one) leaves the C++ files under it unformatted while the other hooks still run.
 
-Change an answer at the same time: `copier update --defaults --data workspace_dir=ws` (or without `--defaults`, to be
-asked every question again). Copier replays the project's own changes onto the new template version (a three-way
+Change an answer at the same time: `copier update --defaults --data description="..."` (or without `--defaults`, to
+be asked every question again). An answer the template no longer asks stays in `.copier-answers.yml` unused: delete
+it in the update commit (`workspace_dir` since v1.2.0). Copier replays the project's own changes onto the new template version (a three-way
 merge), so the project lines (below) are kept; a template-owned line edited in the repository conflicts.
 
 ### Adopt the template in an existing repository

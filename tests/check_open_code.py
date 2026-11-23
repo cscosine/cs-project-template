@@ -4,7 +4,7 @@
     tests/check_open_code.py <rendered project> <scratch folder>
 
 Copies the two scripts (and the README, for its "Working in VS Code" line) into fake repositories made in the scratch
-folder: a project with its own sources (standalone csCMake layout, a venv), a library checked out by its project
+folder: a project with its own sources (standalone csCMake layout in _csw and in a folder of another name, a venv), a library checked out by its project
 (sibling layout), a repository without csCMake sources, an env layout without its variable. The builds are fake
 CMakeCache.txt files: Ninja Multi-Config (gcc), Ninja single-config with Catch2 (clang), Visual Studio (clang-cl). A
 stub `code` first on the PATH records how VS Code would be opened. Checks the workspace files the scripts write.
@@ -54,17 +54,21 @@ def fake_cache(build: Path, source: Path, compiler: str, generator: str, configu
     write(build / "CMakeCache.txt", "".join(f"{key}={value}\n" for key, value in lines.items()))
 
 
-def make_repository(root: Path, name: str, rendered: Path, layout: str | None, venv: bool) -> Path:
+def make_repository(
+    root: Path, name: str, rendered: Path, layout: str | None, venv: bool, standalone_dir: str = "_csw"
+) -> Path:
     repo = root / name
     repo.mkdir(parents=True)
     for file in ("open-code.sh", "open-code.ps1", "README.md"):
         shutil.copy(rendered / file, repo / file)
     if layout is not None:
         write(repo / "CMakeLists.txt", "cmake_minimum_required(VERSION 3.25)\n")
-        include = "${sourceDir}/workspace" if layout.startswith("standalone") else "${sourceParentDir}"
+        include = {"standalone": f"${{sourceDir}}/{standalone_dir}/csCMake", "env": "$penv{CSCMAKE_ROOT}"}.get(
+            layout.split("-")[0], "${sourceParentDir}/csCMake"
+        )
         write(
             repo / "csCMakeProjectSetup.json",
-            json.dumps({"version": 10, "include": [f"{include}/csCMake/presets/layout/{layout}.json"]}) + "\n",
+            json.dumps({"version": 10, "include": [f"{include}/presets/layout/{layout}.json"]}) + "\n",
         )
     if venv:
         write(repo / ".venv" / ("Scripts/Activate.ps1" if WINDOWS else "bin/activate"), "\n")
@@ -122,11 +126,11 @@ def check_shell(runner: Runner, shell: list[str], scratch: Path, rendered: Path)
     root = scratch / "standalone"
     shutil.rmtree(root, ignore_errors=True)
     app = make_repository(root, "app", rendered, "standalone", venv=True)
-    builds = app / "workspace" / "build"
+    builds = app / "_csw" / "build"
 
     code, _ = runner.run(shell, app)
     check(code == 0, "no build yet: exit 0")
-    python_only = load(app / "workspace" / "app.code-workspace")
+    python_only = load(app / "_csw" / "app.code-workspace")
     check(python_only["settings"]["clangd.enable"] is False, "Python-only window: clangd off")
     check(
         python_only["settings"]["cmake.configureOnOpen"] is False, "Python-only window: CMake Tools does not configure"
@@ -214,6 +218,15 @@ def check_shell(runner: Runner, shell: list[str], scratch: Path, rendered: Path)
     code, _ = runner.run(shell, lib)
     check(code == 0, "library: its single build without a filter")
     check("python.defaultInterpreterPath" not in load(lib_build / "lib.code-workspace")["settings"], "library: no venv")
+
+    # the standalone folder is the one of the include, whatever its name: none is written in the scripts
+    root = scratch / "anyname"
+    shutil.rmtree(root, ignore_errors=True)
+    other = make_repository(root, "other", rendered, "standalone-short", venv=False, standalone_dir="any/where")
+    other_build = other / "any" / "where" / "build" / "v1gcc" / "other"
+    fake_cache(other_build, other, "/usr/bin/g++", "Ninja Multi-Config", "Debug")
+    code, _ = runner.run(shell, other)
+    check(code == 0 and (other_build / "other.code-workspace").is_file(), "standalone: the folder of the include")
 
     # a repository without csCMake sources (a tool, a project without C++ of its own)
     root = scratch / "plain"
