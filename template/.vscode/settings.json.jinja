@@ -33,7 +33,16 @@
   "files.exclude": {
     "**/__pycache__": true
   },
-  "editor.formatOnSave": true{% if kind != 'library' %},{% endif %}
+  "editor.formatOnSave": true,
+  "[c]": {
+    "editor.formatOnSave": false
+  },
+  "[cpp]": {
+    "editor.formatOnSave": false
+  },
+  "[cuda-cpp]": {
+    "editor.formatOnSave": false
+  }{% if kind != 'library' %},{% endif %}
 {%- if kind != 'library' %}
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",

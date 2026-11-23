@@ -29,7 +29,9 @@ section "Working in VS Code". `open-code` activates the venv and, for csCMake so
 `csCMakeProjectSetup.json`), opens VS Code on a workspace file it writes in one of their csorchestrator builds (found
 from the csCMake layout): build folder, configurations, IntelliSense (clangd, or cpptools for Visual Studio / Xcode
 builds), debugger (gdb, or the Visual Studio debugger on Windows). Checked on fake builds on Linux, macOS and Windows
-by the template's CI (`tests/check_open_code.py`).
+by the template's CI (`tests/check_open_code.py`). Formatting on save: Python (ruff); not C / C++ / CUDA, whose formatter is
+pre-commit's pinned clang-format (the editor's clangd may bundle another version). `extensions.json` recommends
+Claude Code (`anthropic.claude-code`) too.
 
 Claude Code: `.claude/settings.json` declares the `cscosine` plugin marketplace (`cscosine/.github`) and enables
 `cs-org` plus the plugins of the answer `claude_plugins`, the tools and libraries the repository uses: `cscmake`,
