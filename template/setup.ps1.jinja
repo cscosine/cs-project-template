@@ -67,7 +67,11 @@ Write-Host "Setup complete."
 Write-Host ""
 Write-Host "Next:"
 Write-Host "  .\.venv\Scripts\Activate.ps1"
-Write-Host "  code ."
-Write-Host ""
-Write-Host "Or:"
-Write-Host "  .\open-code.ps1"
+{%- if kind == 'project' %}
+Write-Host "  python {{ project_name }}_project.py   # downloads the dependencies, builds"
+{%- endif %}
+{%- if kind == 'tool' %}
+Write-Host "  .\open-code.ps1   # VS Code with the venv"
+{%- else %}
+Write-Host "  .\open-code.ps1   # VS Code: the venv, and a C++ build when there is one (not 'code .': no build)"
+{%- endif %}

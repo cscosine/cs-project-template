@@ -10,10 +10,8 @@ _exclude:
   # library: C++ only, no Python, no build CI of its own
   - "{% if kind == 'library' %}setup.sh*{% endif %}"
   - "{% if kind == 'library' %}setup.ps1*{% endif %}"
-  - "{% if kind == 'library' %}open-code.*{% endif %}"
   - "{% if kind == 'library' %}conftest.py{% endif %}"
   - "{% if kind == 'library' %}pyproject.toml*{% endif %}"
-  - "{% if kind == 'library' %}.vscode/settings.json*{% endif %}"
   - "{% if kind == 'library' %}.github/release.yml{% endif %}"
   # the tests skeleton: created with a new repository only, never added by an update
   - "{% if kind == 'library' or _copier_operation == 'update' %}tests{% endif %}"

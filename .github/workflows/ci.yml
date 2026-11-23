@@ -1,6 +1,7 @@
 # The CI of the template: creates a project of every kind from the commit under test (tests/create_project.py: the
 # template rendered by copier, plus a hello world), then runs what a developer runs in it: the setup script, pre-commit
-# on every file (nothing may change: the rendered files are already formatted), pytest --run-all.
+# on every file (nothing may change: the rendered files are already formatted), pytest --run-all; and open-code on fake
+# builds (tests/check_open_code.py).
 name: CI
 
 on:
@@ -80,6 +81,13 @@ jobs:
           pytest --run-all -ra
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         shell: pwsh
+
+      # open-code.sh (Linux, macOS: bash 3.2) / open-code.ps1 (Windows: PowerShell 7 and 5.1) on fake repositories and
+      # builds, a stub `code` recording how VS Code would be opened: the scripts are the same for every kind
+      - name: open-code on fake builds
+        if: matrix.kind == 'project'
+        run: python tests/check_open_code.py "${{ runner.temp }}/hello" "${{ runner.temp }}/open-code-check"
+        shell: bash
 
   # the one stable check name for rulesets
   ci-ok:

@@ -20,7 +20,7 @@ Commands:
 Who owns which file (template: [cs-project-template](https://github.com/cscosine/cs-project-template); change it
 there, then `copier update --defaults`; never edit its parts here):
 
-- Template: {% if kind != 'library' %}`setup.sh`, `setup.ps1`, `open-code.sh`, `open-code.ps1`, `conftest.py`, {% endif %}`.clang-format`,
+- Template: {% if kind != 'library' %}`setup.sh`, `setup.ps1`, {% endif %}`open-code.sh`, `open-code.ps1`, {% if kind != 'library' %}`conftest.py`, {% endif %}`.clang-format`,
   `.vscode/`, `.github/` (the workflows: `checks.yml`{% if kind == 'tool' %}, `ci.yml`{% endif %} only), `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`,
   `LICENSE`.
 - Template and project: {% if kind != 'library' %}`pyproject.toml` (template tables between the `template` markers), {% endif %}`.pre-commit-config.yaml` (project hooks

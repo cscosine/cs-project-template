@@ -1,4 +1,5 @@
 {
+{%- if kind != 'library' %}
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.pytestArgs": [
@@ -25,14 +26,15 @@
     ".venv"
   ],
   "python.analysis.autoImportCompletions": true,
-  "C_Cpp.intelliSenseEngine": "disabled",
-  "C_Cpp.autocomplete": "disabled",
-  "C_Cpp.errorSquiggles": "disabled",
-  "clangd.arguments": [
-    "--background-index",
-    "--clang-tidy"
-  ],
-  "editor.formatOnSave": true,
+{%- endif %}
+{%- if kind != 'tool' %}
+  "cmake.ctest.testSuiteDelimiter": " - ",
+{%- endif %}
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "editor.formatOnSave": true{% if kind != 'library' %},{% endif %}
+{%- if kind != 'library' %}
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
@@ -41,4 +43,5 @@
   },
   "ruff.organizeImports": true,
   "ruff.fixAll": true
+{%- endif %}
 }

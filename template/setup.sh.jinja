@@ -78,9 +78,13 @@ pre-commit install
 
 echo "Setup complete."
 echo ""
-echo "Next: "
+echo "Next:"
 echo "  source .venv/bin/activate"
-echo "  code ."
-echo ""
-echo "Or: "
-echo "  ./open-code.sh"
+{%- if kind == 'project' %}
+echo "  python {{ project_name }}_project.py   # downloads the dependencies, builds"
+{%- endif %}
+{%- if kind == 'tool' %}
+echo "  ./open-code.sh   # VS Code with the venv"
+{%- else %}
+echo "  ./open-code.sh   # VS Code: the venv, and a C++ build when there is one (not 'code .': no build)"
+{%- endif %}
