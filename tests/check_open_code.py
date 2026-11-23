@@ -52,6 +52,21 @@ def fake_cache(build: Path, source: Path, compiler: str, generator: str, configu
     }
     lines.update(extra)
     write(build / "CMakeCache.txt", "".join(f"{key}={value}\n" for key, value in lines.items()))
+    # the compiler CMake identified (gcc, clang, clang-cl, msvc), as CMakeFiles/<version>/CMakeCXXCompiler.cmake says
+    name = compiler.rsplit("/", 1)[-1].lower()
+    compiler_id, variant = (
+        ("Clang", "MSVC")
+        if "clang-cl" in name
+        else ("Clang", "GNU")
+        if "clang" in name
+        else ("MSVC", "MSVC")
+        if name.startswith("cl")
+        else ("GNU", "GNU")
+    )
+    write(
+        build / "CMakeFiles" / "4.0.0" / "CMakeCXXCompiler.cmake",
+        f'set(CMAKE_CXX_COMPILER_ID "{compiler_id}")\nset(CMAKE_CXX_COMPILER_FRONTEND_VARIANT "{variant}")\n',
+    )
 
 
 def make_repository(
@@ -206,6 +221,18 @@ def check_shell(runner: Runner, shell: list[str], scratch: Path, rendered: Path)
         settings["cmake.platform"] == "x64" and settings["cmake.toolset"] == "ClangCL",
         "Visual Studio: platform, toolset",
     )
+
+    # short build folder names say no compiler: the family of the build does (g++ is gcc)
+    root = scratch / "short"
+    shutil.rmtree(root, ignore_errors=True)
+    short = make_repository(root / "ws", "short", rendered, "sibling-short", venv=False)
+    short_gcc = root / "ws" / "build" / "v1lgg" / "short"
+    fake_cache(short_gcc, short, "/usr/bin/g++", "Ninja Multi-Config", "Debug")
+    fake_cache(root / "ws" / "build" / "v1lgc" / "short", short, "/usr/bin/clang++", "Ninja Multi-Config", "Debug")
+    code, output = runner.run(shell, short)
+    check(code == 1 and "(gcc)" in output and "(clang)" in output, "several builds: listed with their family")
+    code, _ = runner.run(shell, short, "gcc")
+    check(code == 0 and (short_gcc / "short.code-workspace").is_file(), "short folder names: the gcc build by family")
 
     # a library checked out by its project (sibling layout, no venv)
     root = scratch / "sibling"
